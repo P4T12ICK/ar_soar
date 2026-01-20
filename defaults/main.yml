@@ -1,0 +1,6 @@
+---
+
+ar_soar_password: Pl3ase-k1Ll-me:p
+ar_soar_setup_user: "{{ ansible_user | default('ec2-user') }}"
+ar_soar_phantom_user: phantom
+

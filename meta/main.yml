@@ -1,0 +1,15 @@
+galaxy_info:
+  author: p4t12ick
+  description: Set up Splunk SOAR attack range.
+  company: Splunk
+
+  license: Apache License 2.0
+
+  min_ansible_version: "2.10"
+
+  galaxy_tags:
+    - soar
+    - splunk
+
+
+dependencies: []
