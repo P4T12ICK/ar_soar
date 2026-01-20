@@ -12,7 +12,7 @@
   become: yes
   become_user: root
   unarchive:
-    src: "../../apps/{{ phantom_server.phantom_app }}"
+    src: "{{ ar_soar_apps_folder }}{{ ar_soar_file }}"
     dest: "/home/{{ ar_soar_setup_user }}"
     owner: "{{ ar_soar_setup_user }}"
     group: "{{ ar_soar_setup_user }}"
