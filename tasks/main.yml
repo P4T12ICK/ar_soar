@@ -57,7 +57,7 @@
   shell: |
     su - phantom -c "cd /home/phantom/splunk-soar && ./soar-install --splunk-soar-home /opt/soar --no-prompt --ignore-warnings"
   async: 3600
-  poll: 10
+  poll: 30
   register: soar_install_result
 
 - name: Display SOAR installation output
@@ -81,3 +81,12 @@
     force_basic_auth: yes
     validate_certs: no
 
+- name: open up api allowed ip list
+  uri:
+    url: https://127.0.0.1:8443/rest/ph_user/2
+    method: POST
+    body: '{"allowed_ips":["any"]}'
+    user: soar_local_admin
+    password: "{{ar_soar_password}}"
+    force_basic_auth: yes
+    validate_certs: no
