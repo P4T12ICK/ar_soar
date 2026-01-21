@@ -49,6 +49,16 @@
   become_user: root
   command: "chown -R {{ ar_soar_phantom_user }}:{{ ar_soar_phantom_user }} /home/{{ ar_soar_phantom_user }}/splunk-soar"
 
+- name: Change ownership of /opt/soar to phantom user
+  become: yes
+  become_user: root
+  file:
+    path: /opt/soar
+    owner: "{{ ar_soar_phantom_user }}"
+    group: "{{ ar_soar_phantom_user }}"
+    recurse: yes
+    state: directory
+
 - name: run the phantom install script 
   become: yes
   become_user: root
