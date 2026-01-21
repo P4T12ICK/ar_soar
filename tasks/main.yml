@@ -30,6 +30,15 @@
   become: yes
   command: "/home/{{ ar_soar_setup_user }}/splunk-soar/soar-prepare-system --splunk-soar-home /opt/soar --no-prompt" 
 
+- name: Create phantom user and home directory
+  become: yes
+  become_user: root
+  user:
+    name: "{{ ar_soar_phantom_user }}"
+    create_home: yes
+    shell: /bin/bash
+    state: present
+
 - name: copy splunk soar folder
   become: yes
   become_user: root
