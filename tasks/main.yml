@@ -29,50 +29,42 @@
 - name: prepare phantom install script without apps
   become: yes
   command: "/home/{{ ar_soar_setup_user }}/splunk-soar/soar-prepare-system --splunk-soar-home /opt/soar --no-prompt" 
-
-- name: Create phantom user and home directory
-  become: yes
-  become_user: root
-  user:
-    name: "{{ ar_soar_phantom_user }}"
-    create_home: yes
-    shell: /bin/bash
-    state: present
+  # Note: soar-prepare-system creates a user named 'phantom' (hardcoded)
 
 - name: copy splunk soar folder
   become: yes
   become_user: root
-  command: "cp -r /home/{{ ar_soar_setup_user }}/splunk-soar /home/{{ ar_soar_phantom_user }}/splunk-soar"
+  command: "cp -r /home/{{ ar_soar_setup_user }}/splunk-soar /home/phantom/splunk-soar"
 
 - name: chown splunk soar folder
   become: yes
   become_user: root
-  command: "chown -R {{ ar_soar_phantom_user }}:{{ ar_soar_phantom_user }} /home/{{ ar_soar_phantom_user }}/splunk-soar"
+  command: "chown -R phantom:phantom /home/phantom/splunk-soar"
 
 - name: Change ownership of /opt/soar to phantom user
   become: yes
   become_user: root
   file:
     path: /opt/soar
-    owner: "{{ ar_soar_phantom_user }}"
-    group: "{{ ar_soar_phantom_user }}"
+    owner: phantom
+    group: phantom
     recurse: yes
     state: directory
 
-# - name: run the phantom install script 
-#   become: yes
-#   become_user: root
-#   shell: |
-#     su - {{ ar_soar_phantom_user }} -c "cd /home/{{ ar_soar_phantom_user }}/splunk-soar && ./soar-install --splunk-soar-home /opt/soar --no-prompt --ignore-warnings"
+- name: run the phantom install script 
+  become: yes
+  become_user: root
+  shell: |
+    su - phantom -c "cd /home/phantom/splunk-soar && ./soar-install --splunk-soar-home /opt/soar --no-prompt --ignore-warnings"
 
-# - name: change phantom admin password
-#   uri:
-#     url: https://127.0.0.1:8443/rest/user_settings
-#     method: POST
-#     user: soar_local_admin
-#     password: password
-#     body: {"old_password":"password","password":"{{ar_soar_password}}"}
-#     body_format: json
-#     force_basic_auth: yes
-#     validate_certs: no
+- name: change phantom admin password
+  uri:
+    url: https://127.0.0.1:8443/rest/user_settings
+    method: POST
+    user: soar_local_admin
+    password: password
+    body: {"old_password":"password","password":"{{ar_soar_password}}"}
+    body_format: json
+    force_basic_auth: yes
+    validate_certs: no
 

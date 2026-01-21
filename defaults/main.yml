@@ -2,6 +2,6 @@
 
 ar_soar_password: Pl3ase-k1Ll-me:p
 ar_soar_setup_user: "{{ ansible_user | default('ec2-user') }}"
-ar_soar_phantom_user: phantom
+# Note: ar_soar_phantom_user is not used - the soar-prepare-system script creates a hardcoded 'phantom' user
 ar_soar_apps_folder: "../../apps/"
 ar_soar_file: "splunk_soar-unpriv-7.1.0.225-dadc4693-amzn2023-x86_64.tgz"
