@@ -70,6 +70,35 @@
     msg: "SOAR installation failed with return code {{ soar_install_result.rc }}. Output: {{ soar_install_result.stderr_lines | default([]) }}"
   when: soar_install_result.rc is defined and soar_install_result.rc != 0
 
+- name: Ensure firewalld is running
+  become: yes
+  become_user: root
+  systemd:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: Open port 8443 for Splunk SOAR
+  become: yes
+  become_user: root
+  firewalld:
+    port: 8443/tcp
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: Wait for SOAR web interface to be ready
+  uri:
+    url: https://127.0.0.1:8443/rest/login
+    method: GET
+    status_code: [200, 401, 403]
+    validate_certs: no
+  register: soar_ready
+  until: soar_ready.status in [200, 401, 403]
+  retries: 30
+  delay: 10
+  ignore_errors: yes
+
 - name: change phantom admin password
   uri:
     url: https://127.0.0.1:8443/rest/user_settings
