@@ -56,6 +56,19 @@
   become_user: root
   shell: |
     su - phantom -c "cd /home/phantom/splunk-soar && ./soar-install --splunk-soar-home /opt/soar --no-prompt --ignore-warnings"
+  async: 3600
+  poll: 10
+  register: soar_install_result
+
+- name: Display SOAR installation output
+  debug:
+    msg: "{{ soar_install_result.stdout_lines }}"
+  when: soar_install_result.stdout_lines is defined
+
+- name: Verify SOAR installation completed successfully
+  fail:
+    msg: "SOAR installation failed with return code {{ soar_install_result.rc }}. Output: {{ soar_install_result.stderr_lines | default([]) }}"
+  when: soar_install_result.rc is defined and soar_install_result.rc != 0
 
 - name: change phantom admin password
   uri:
