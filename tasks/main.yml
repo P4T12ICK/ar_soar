@@ -51,10 +51,9 @@
 
 - name: run the phantom install script 
   become: yes
-  become_user: "{{ ar_soar_phantom_user }}"
-  command: ./soar-install --splunk-soar-home /opt/soar --no-prompt --ignore-warnings
-  args:
-    chdir: "/home/{{ ar_soar_phantom_user }}/splunk-soar"
+  become_user: root
+  shell: |
+    su - {{ ar_soar_phantom_user }} -c "cd /home/{{ ar_soar_phantom_user }}/splunk-soar && ./soar-install --splunk-soar-home /opt/soar --no-prompt --ignore-warnings"
 
 - name: change phantom admin password
   uri:
